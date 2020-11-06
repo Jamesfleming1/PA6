@@ -1,5 +1,5 @@
 from time import sleep
-
+import random
 # Maze.py
 #  original version by db, Fall 2017
 #  Feel free to modify as desired.
@@ -31,8 +31,8 @@ class Maze:
     #   self.width: number of columns
     #   self.rows
 
-    def __init__(self, mazefilename):
-
+    def __init__(self, mazefilename, observableColors):
+        self.observableColors = self.observableColors
         self.robotloc = []
         # read the maze file into a list of strings
         f = open(mazefilename)
@@ -58,6 +58,12 @@ class Maze:
         self.height = len(lines)
 
         self.map = list("".join(lines))
+        # here is where we will colorize the map if not already colored 
+        for i in range(self.map):
+            if (self.map[i]=='.'):
+                # Randomly assign from the observable colors. 
+                self.map[i] = random.choice(self.observableColors)
+                
 
     def updateRobotMap(self, newRoboloc):
         self.robotloc = newRoboloc
@@ -73,23 +79,10 @@ class Maze:
         if y < 0 or y >= self.height:
             return False
 
-        return self.map[self.index(x, y)] == "."
+        return self.map[self.index(x, y)] != "#"
 
 
-    def has_robot(self, x, y):
-        if x < 0 or x >= self.width:
-            return False
-        if y < 0 or y >= self.height:
-            return False
-
-        for i in range(0, len(self.robotloc), 2):
-            
-            rx = self.robotloc[i]
-            ry = self.robotloc[i + 1]
-            if rx == x and ry == y:
-                return True
-
-        return False
+    
 
 
     # function called only by __str__ that takes the map and the
@@ -137,20 +130,4 @@ def robotchar(robot_number):
 # Some test code
 
 if __name__ == "__main__":
-    test_maze1 = Maze("maze1.maz")
-    print(test_maze1)
-
-    #test_maze2 = Maze("maze2.maz")
-    #print(test_maze2)
-
-    test_maze3 = Maze("maze3.maz")
-    print(test_maze3)
-
-    print(test_maze3)
-    print(test_maze3.robotloc)
-
-    print(test_maze3.is_floor(2, 3))
-    print(test_maze3.is_floor(-1, 3))
-    print(test_maze3.is_floor(1, 0))
-
-    print(test_maze3.has_robot(1, 0))
+  pass

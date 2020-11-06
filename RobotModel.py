@@ -4,12 +4,15 @@ import numpy as np
 from Maze import Maze
 
 class RobotModel(model):
-    def __init__(self, moves, mazeFileName):
-        # Other methods use the maze so make sure it is declared first. 
-        self.maze = Maze(mazeFileName)
+    def __init__(self, moves, mazeFileName, observableColors=["r", "g", "b", "y"]):
+        # Other methods use the maze so make sure it is declared first.
+        # 
+        self.observableColors = observableColors 
+        self.maze = Maze(mazeFileName, observableColors)
+    
         self.transitionMatrix = self.createTransitionModel()
         self.prior = self.createPrior()
-        self.updateMatrixDictionary = self.createUpdateMatrixDictionary()
+        self.updateMatrixDictionary = self.createUpdateMatrixDictionary(["r", "g","b", "y"])
         super().__init__(self.prior, self.transitionMatrix, self.updateMatrixDictionary)
 
 
@@ -102,17 +105,18 @@ class RobotModel(model):
 
     # create an update matrix that key is color observed a matrix that relates position robot is at to probability key color was observed
     # 
-    def createUpdateMatrixDictionary(self):
-        return {}
+    def createUpdateMatrixDictionary(self, observableColors):
+        updateMatrixDictionary ={}
+        for color in observableColors:
+            for x in range(self.maze.width):
+                for y in range(self.maze.height):
+                    pass
+        return updateMatrixDictionary
+
         # is based of the sensor model. We are given a color. Then we ask what is the probability we got that color from a specific position. 
         # there are 16 or (n^2) positions that the robot could be. And we need a probability of reading color c for each of those positions
-        # we want the rows of all our matrices to be the locations of the maze. For the matrix multiplication to work out we need to multiply a 16x1 matrix 
-        # which is every row (location in matrix) to a single probability for a given color by the identity matrix of 16 so that we get a 16 x16 where the 
-        # diagnols correspond to the probailities and every other entry is 0. We need the information of the maze to tell us this because the robot cannot actually get sensor readings.
-    
-    
-
-
+       
+        
 if __name__ == "__main__":
     # Make sure we get a column vector of 16 with all equal probabilities of 1/16 
     # This is the prior of an empty maze
@@ -140,10 +144,11 @@ if __name__ == "__main__":
     #print(startArray.shape)
     #print(r1.transitionMatrix)
     #print(r1.transitionMatrix.shape)
-    print(r1.transitionMatrix)
+    #print(r1.transitionMatrix)
     # Test an play around with different values in the matrix. 
     # Pretty confident our transition matrix is correctly built!
-    print(r1.transitionMatrix[10][5])
+    #print(r1.transitionMatrix[10][5])
+    print(r1.maze)
 
 
 
