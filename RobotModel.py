@@ -4,7 +4,7 @@ import numpy as np
 from Maze import Maze
 
 class RobotModel(model):
-    def __init__(self, moves, mazeFileName, observableColors=["r", "g", "b", "y"]):
+    def __init__(self,mazeFileName, observableColors=["r", "g", "b", "y"]):
         # Other methods use the maze so make sure it is declared first.
         # 
         self.observableColors = observableColors 
@@ -107,10 +107,33 @@ class RobotModel(model):
     # 
     def createUpdateMatrixDictionary(self, observableColors):
         updateMatrixDictionary ={}
+
+        
         for color in observableColors:
+            # keep track of where in the matrix we are
+
+            index = 0
+            # start with an identity matrix
+            matrix = np.identity(self.maze.width*self.maze.height)
+            # go through every position in the maze
             for x in range(self.maze.width):
                 for y in range(self.maze.height):
-                    pass
+                    # get the color of the maze at that position
+                    colorReturn = self.maze.get_color(x,y)
+                    # if it was a wall or off the maze then colorReturn is null, set probability to 0
+                    if (colorReturn):
+                        # if have a sensor reading of the color we are on then this occurs with 0.88 probability
+                        if(colorReturn == color.lower()):
+                            # These values are given by the problem set. 
+                            matrix[index][index] = 0.88
+                        # if we have a sensor reading that is not the same as the color of this position that would happen 0.04 probability
+                        else:
+                            matrix[index][index] = 0.04
+                    else:
+                        matrix[index][index] = 0.0
+                    # move the index over as we move to the next position in the maze
+                    index+=1
+            updateMatrixDictionary[color] = matrix
         return updateMatrixDictionary
 
         # is based of the sensor model. We are given a color. Then we ask what is the probability we got that color from a specific position. 
@@ -120,12 +143,12 @@ class RobotModel(model):
 if __name__ == "__main__":
     # Make sure we get a column vector of 16 with all equal probabilities of 1/16 
     # This is the prior of an empty maze
-    r1 = RobotModel([], "emptyMaze.maz")
+    r1 = RobotModel("emptyMaze.maz")
     #print(r1.prior)
     #print(r1.prior.shape)
     # Now add a few walls and makes sure we get equal probabilities of 1/13 for the places with no walls and 0 for places with walls
 
-    r1 = RobotModel([], "maze1.maz")
+    r1 = RobotModel( "maze1.maz")
     #print(r1.prior)
     #print(r1.prior.shape)
 
@@ -149,6 +172,9 @@ if __name__ == "__main__":
     # Pretty confident our transition matrix is correctly built!
     #print(r1.transitionMatrix[10][5])
     print(r1.maze)
+    #print(r1.updateMatrixDictionary["r"])
+    # Can check against maze that this is indeed a reasonable transition matrix for red
+
 
 
 

@@ -2,26 +2,9 @@ from time import sleep
 import random
 # Maze.py
 #  original version by db, Fall 2017
-#  Feel free to modify as desired.
+# Modified by James Fleming Fall 2020
 
-# Maze objects are for loading and displaying mazes, and doing collision checks.
-#  They are not a good object to use to represent the state of a robot mazeworld search
-#  problem, since the locations of the walls are fixed and not part of the state;
-#  you should do something else to represent the state. However, each Mazeworldproblem
-#  might make use of a (single) maze object, modifying it as needed
-#  in the process of checking for legal moves.
-
-# Test code at the bottom of this file shows how to load in and display
-#  a few maze data files (e.g., "maze1.maz", which you should find in
-#  this directory.)
-
-#  the order in a tuple is (x, y) starting with zero at the bottom left
-
-# Maze file format:
-#    # is a wall
-#    . is a floor
-# the command \robot x y adds a robot at a location. The first robot added
-# has index 0, and so forth.
+# Maze has floor spaces covered with a letter representing a color
 
 
 class Maze:
@@ -32,7 +15,8 @@ class Maze:
     #   self.rows
 
     def __init__(self, mazefilename, observableColors):
-        self.observableColors = self.observableColors
+        self.observableColors = observableColors
+        #random.seed(1)
         self.robotloc = []
         # read the maze file into a list of strings
         f = open(mazefilename)
@@ -59,7 +43,7 @@ class Maze:
 
         self.map = list("".join(lines))
         # here is where we will colorize the map if not already colored 
-        for i in range(self.map):
+        for i in range(len(self.map)):
             if (self.map[i]=='.'):
                 # Randomly assign from the observable colors. 
                 self.map[i] = random.choice(self.observableColors)
@@ -82,6 +66,15 @@ class Maze:
         return self.map[self.index(x, y)] != "#"
 
 
+    # returns color of square if it is a floor, returns None if this was not a proper entry or wall
+    def get_color(self, x, y):
+        if (self.is_floor(x,y)):
+            return self.map[self.index(x,y)]
+        else:
+            return None
+
+
+
     
 
 
@@ -98,7 +91,8 @@ class Maze:
             x = self.robotloc[index]
             y = self.robotloc[index + 1]
 
-            renderlist[self.index(x, y)] = robotchar(robot_number)
+            renderlist[self.index(x, y)] = renderlist[self.index(x,y)].capitalize()
+
             robot_number += 1
 
         return renderlist

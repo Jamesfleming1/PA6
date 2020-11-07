@@ -1,7 +1,7 @@
 import numpy.matlib
 import numpy as np
 from model import model
-
+from RobotModel import RobotModel
 #
 # filtering
 # Takes a sequence of sensor readings, and a model
@@ -47,10 +47,10 @@ if __name__ == "__main__":
     prior = np.array([[0.5] ,[0.5]])
     
     prior = np.array([0.5, 0.5])
-    print(prior)
+    #print(prior)
     prior = prior.T
-    print(prior)
-    print(prior.shape)
+    #print(prior)
+    #print(prior.shape)
     
     
 
@@ -65,12 +65,17 @@ if __name__ == "__main__":
     UmbrellaModel = model(prior,transitionMatrix, updateDict)
     sequence = ["U", "U"]
     distributions = filter(sequence, UmbrellaModel)
-    print(distributions)
+    #print(distributions)
     # In fact this does give us the correct distributions for day 1 and day 2 of the umbrella
     # after seeing the umbrella twice. Now the challenge is how do we build these same datastructures
     # for the matrix robot program. 
 
-
+    r1 = RobotModel("maze1.maz")
+    print(r1.maze)
+    sequences = ["y", "y", "g", "r"]
+    print(filter(sequences, r1)[3])
+    # nice with random seed 1 set in maze we can run this ans see that
+    # we will get a distribution that puts the robot in some sensible places. 
 
 
 
