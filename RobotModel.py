@@ -75,15 +75,15 @@ class RobotModel(model):
                     # Simple algebra can convert a position in the maze to its index in the transition matrix 
                     # Because of how we order the positions of a maze in our matrix equivalent. Current Position (0,0) is row 0 in matrix. Next position of (0,0) would be column 0 in matrix
                     
-                    rowIndex = x*self.maze.width + y
+                    rowIndex = x*self.maze.height + y
                     
                     #keep track of how many neighbors are walls. 
                     numWallNeighbors = 0
 
                     # go through neighbors of this position(up +-1 and right +-1)
                     for d in ([-1, 1]):
-                        xIndex = (x+d)*self.maze.width + y 
-                        yIndex = x*self.maze.width + (y+d)
+                        xIndex = (x+d)*self.maze.height + y 
+                        yIndex = x*self.maze.height + (y+d)
                         if (self.maze.is_floor(x+d, y)):
                             # the probability that we were at a give (x,y) and transitioned to 
                             # (x+d, y) is 0.25 if (x+d, y) is a floor

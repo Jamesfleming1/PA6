@@ -17,6 +17,7 @@ class Maze:
     def __init__(self, mazefilename, observableColors):
         self.observableColors = observableColors
         #random.seed(1)
+        
         self.robotloc = []
         # read the maze file into a list of strings
         f = open(mazefilename)
